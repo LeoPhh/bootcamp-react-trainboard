@@ -6,23 +6,41 @@ import Dropdown from './components/Dropdown';
 import Station from './components/Station';
 import Stations from './components/Stations';
 
-const selectableStations = ['Kings Cross', 'Glasgow', 'Edinburgh', 'Birmingham', 'Victoria'];
+const stationMap = new Map<string, string>([
+    ['Kings Cross', 'KGX'],
+    ['Edinburgh', 'EDB'],
+    ['Victoria', 'VIC'],
+    ['Birmingham', 'BHI'],
+    ['Glasgow', 'GLC'],
+]);
+
+const stationNames =  Array.from(stationMap.keys());
+
+const urlMaker = (stationOne: string, stationTwo: string) => {
+    return `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${stationMap.get(stationOne)}/${stationMap.get(stationTwo)}/`;
+};
 
 const App = () => {
+
     const [departureStation, setDepartureStation] = React.useState('');
+    const [arrivalStation, setArrivalStation] = React.useState('');
+
+    const onSubmit = () => {
+        departureStation && arrivalStation && window.open(urlMaker(departureStation, arrivalStation));
+    };
 
     return <BrowserRouter>
         <div className = "App">
             <div className = "dropdown-menus-container">
                 <div className = "dropdown">
-                    <Dropdown valueUpdateFunction = { setDepartureStation } placeHolder = "Select Station" label = 'Departure:' selectableStations = { selectableStations } id = 'departure-station-selection'/>
+                    <Dropdown valueUpdateFunction = { setDepartureStation } placeHolder = "Select Station" label = 'Departure:' selectableStations = { stationNames } id = 'departure-station-selection'/>
                 </div>
                 <div className = "dropdown">
-                    <Dropdown placeHolder = "Select Station" label = 'Arrival:' selectableStations = { selectableStations.filter((s) => s!==departureStation) } id = 'arrival-station-selection'/>
+                    <Dropdown valueUpdateFunction = { setArrivalStation } placeHolder = "Select Station" label = 'Arrival:' selectableStations = { stationNames.filter((s) => s!==departureStation) } id = 'arrival-station-selection'/>
                 </div>
             </div>
             
-            <Button text = 'Select Station' onClick = { ()=>{return null;} } classes = 'is-primary'></Button>
+            <Button text = 'Select Station' onClick = { onSubmit } classes = 'is-danger' disabled = { !departureStation || !arrivalStation }/>
             <Routes>
                 <Route path = "/stations">
                     <Route path = ":id" element = { <Station/> }/>

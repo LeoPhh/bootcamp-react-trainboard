@@ -11,9 +11,9 @@ interface DropdownProps {
 const Dropdown = ({ placeHolder, label, selectableStations, id, valueUpdateFunction }: DropdownProps) => {
     const [showPlaceholder, setShowPlaceholder] = React.useState(true);
 
-    const onChangeAndRemovePlaceholder: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    const onChangeAndRemovePlaceholder: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
         setShowPlaceholder(false);
-        valueUpdateFunction && valueUpdateFunction(e.target.value);
+        valueUpdateFunction && valueUpdateFunction(event.target.value);
     };
     
     return (
