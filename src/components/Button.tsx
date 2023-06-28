@@ -1,10 +1,20 @@
-import React from "react";
+import React from 'react';
 
 interface ButtonProps {
-    text: string,
-    onClick: () => {},
+    styles?: React.CSSProperties;
+    text: string;
+    onClick: () => void;
 }
 
-export default function Button({}: ButtonProps) {
-    return <></>;
-}
+const Button = ({ text, onClick, styles, ...props }: ButtonProps) => {
+    const buttonStyle: React.CSSProperties = {
+        padding: '10px',
+        fontSize: '30pt',
+    };
+
+    return <button style = { Object.assign(buttonStyle, styles) } onClick = { onClick } { ...props }>
+        {text}
+    </button>;
+};
+
+export default Button;
