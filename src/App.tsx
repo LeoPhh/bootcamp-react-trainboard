@@ -8,11 +8,21 @@ import Stations from './components/Stations';
 
 const selectableStations = ['Kings Cross', 'Glasgow', 'Edinburgh', 'Birmingham', 'Victoria'];
 
-const App = () => (
-    <BrowserRouter>
+const App = () => {
+    const [departureStation, setDepartureStation] = React.useState('');
+
+    return <BrowserRouter>
         <div className = "App">
-            <Dropdown placeHolder = "Select Station" label = 'Choose a departure station:' selectableStations = { selectableStations }/>
-            <Button text = 'Select Station' onClick = { ()=>{return null;} }></Button>
+            <div className = "dropdown-menus-container">
+                <div className = "dropdown">
+                    <Dropdown valueUpdateFunction = { setDepartureStation } placeHolder = "Select Station" label = 'Departure:' selectableStations = { selectableStations } id = 'departure-station-selection'/>
+                </div>
+                <div className = "dropdown">
+                    <Dropdown placeHolder = "Select Station" label = 'Arrival:' selectableStations = { selectableStations.filter((s) => s!==departureStation) } id = 'arrival-station-selection'/>
+                </div>
+            </div>
+            
+            <Button text = 'Select Station' onClick = { ()=>{return null;} } classes = 'is-primary'></Button>
             <Routes>
                 <Route path = "/stations">
                     <Route path = ":id" element = { <Station/> }/>
@@ -24,7 +34,7 @@ const App = () => (
                 <Link to = "/stations">Stations</Link>
             </footer>
         </div>
-    </BrowserRouter>
-);
+    </BrowserRouter>;
+};
 
 export default App;

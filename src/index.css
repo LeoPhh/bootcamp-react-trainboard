@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.dropdown-menus-container {
+  margin-top: 2%;
+  padding: 1rem;
+}
+
+.dropdown {
+  padding: .4rem;
+}
