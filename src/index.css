@@ -21,3 +21,11 @@ code {
 .dropdown {
   padding: .4rem;
 }
+
+.level {
+  background-color: #faf2f1;
+}
+
+.level-item {
+  padding: 12%;
+}
