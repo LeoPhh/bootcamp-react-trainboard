@@ -26,22 +26,38 @@ const App = () => {
     const [arrivalStation, setArrivalStation] = React.useState('');
 
     const onSubmit = () => {
-        departureStation && arrivalStation && window.open(urlMaker(departureStation, arrivalStation));
+        departureStation
+        && arrivalStation
+        && window.open(urlMaker(departureStation, arrivalStation));
     };
 
     return <BrowserRouter>
         <div className = "App">
             <div className = "dropdown-menus-container">
-                <Dropdown valueUpdateFunction = { setDepartureStation } label = 'Departure:' selectableStations = { stationNames } id = 'departure-station-selection'/>
-                <Dropdown valueUpdateFunction = { setArrivalStation } label = 'Arrival:' selectableStations = { stationNames.filter((s) => s!==departureStation) } id = 'arrival-station-selection'/>
+                <Dropdown
+                    valueUpdateFunction = { setDepartureStation }
+                    label = 'Departure:'
+                    selectableStations = { stationNames }
+                    id = 'departure-station-selection'
+                />
+                <Dropdown
+                    valueUpdateFunction = { setArrivalStation }
+                    label = 'Arrival:'
+                    selectableStations = { stationNames.filter((s) => s!==departureStation) }
+                    id = 'arrival-station-selection'
+                />
             </div>
-            
-            <Button text = 'Select Station' onClick = { onSubmit } classes = 'is-danger' disabled = { !departureStation || !arrivalStation }/>
+
+            <Button
+                text = 'Select Station'
+                onClick = { onSubmit }
+                classes = 'is-danger'
+                disabled = { !departureStation || !arrivalStation }
+            />
 
             <Routes>
                 <Route path = "/stations">
                     <Route path = ":id" element = { <Station/> }/>
-       
                     <Route index element = { <Stations/> }/>
                 </Route>
             </Routes>

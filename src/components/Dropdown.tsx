@@ -15,15 +15,20 @@ const Dropdown = ({ label, selectableStations, id, valueUpdateFunction }: Dropdo
         setShowPlaceholder(false);
         valueUpdateFunction && valueUpdateFunction(event.target.value);
     };
-    
+
     return (
         <div className = "dropdown">
             <div className = "field">
                 <label className = 'label' htmlFor = { id }>{label}</label>
                 <div className = "select">
-                    <select name = "stations" id = { id } onChange = { onChangeAndRemovePlaceholder }>
+                    <select
+                        name = "stations"
+                        id = { id }
+                        onChange = { onChangeAndRemovePlaceholder }
+                    >
                         {
-                            showPlaceholder && <option value = "" disabled selected>{placeHolder}</option>
+                            showPlaceholder
+                            && <option value = "" disabled selected>{placeHolder}</option>
                         }
                         {selectableStations.map((station, i) => {
                             return <option value = { station } key = { i }>{station}</option>;
