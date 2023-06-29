@@ -14,7 +14,7 @@ const stationMap = new Map<string, string>([
     ['Glasgow', 'GLC'],
 ]);
 
-const stationNames =  Array.from(stationMap.keys());
+const stationNames = Array.from(stationMap.keys());
 
 const urlMaker = (stationOne: string, stationTwo: string) => {
     return `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${stationMap.get(stationOne)}/${stationMap.get(stationTwo)}/`;
@@ -32,15 +32,12 @@ const App = () => {
     return <BrowserRouter>
         <div className = "App">
             <div className = "dropdown-menus-container">
-                <div className = "dropdown">
-                    <Dropdown valueUpdateFunction = { setDepartureStation } placeHolder = "Select Station" label = 'Departure:' selectableStations = { stationNames } id = 'departure-station-selection'/>
-                </div>
-                <div className = "dropdown">
-                    <Dropdown valueUpdateFunction = { setArrivalStation } placeHolder = "Select Station" label = 'Arrival:' selectableStations = { stationNames.filter((s) => s!==departureStation) } id = 'arrival-station-selection'/>
-                </div>
+                <Dropdown valueUpdateFunction = { setDepartureStation } label = 'Departure:' selectableStations = { stationNames } id = 'departure-station-selection'/>
+                <Dropdown valueUpdateFunction = { setArrivalStation } label = 'Arrival:' selectableStations = { stationNames.filter((s) => s!==departureStation) } id = 'arrival-station-selection'/>
             </div>
             
             <Button text = 'Select Station' onClick = { onSubmit } classes = 'is-danger' disabled = { !departureStation || !arrivalStation }/>
+
             <Routes>
                 <Route path = "/stations">
                     <Route path = ":id" element = { <Station/> }/>
