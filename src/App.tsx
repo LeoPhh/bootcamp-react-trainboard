@@ -17,7 +17,8 @@ const stationMap = new Map<string, string>([
 const stationNames = Array.from(stationMap.keys());
 
 const urlMaker = (stationOne: string, stationTwo: string) => {
-    return `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${stationMap.get(stationOne)}/${stationMap.get(stationTwo)}/`;
+    return `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${
+        stationMap.get(stationOne)}/${stationMap.get(stationTwo)}/`;
 };
 
 const App = () => {
@@ -29,6 +30,20 @@ const App = () => {
         departureStation
         && arrivalStation
         && window.open(urlMaker(departureStation, arrivalStation));
+    };
+
+    const disableSubmit = () => {
+        return !departureStation || !arrivalStation || departureStation===arrivalStation;
+    };
+
+    const getDisabledMessage = () => {
+        return <div className = "disable-message has-text-danger" >
+            {
+                (!departureStation || !arrivalStation)
+            && <>Select two stations.</>
+            || <>Departure station cannot be the same as arrival station.</>
+            }
+        </div>;
     };
 
     return <BrowserRouter>
@@ -43,16 +58,20 @@ const App = () => {
                 <Dropdown
                     valueUpdateFunction = { setArrivalStation }
                     label = 'Arrival:'
-                    selectableStations = { stationNames.filter((s) => s!==departureStation) }
+                    selectableStations = { stationNames }
                     id = 'arrival-station-selection'
                 />
             </div>
+
+            {
+                disableSubmit() && getDisabledMessage()
+            }
 
             <Button
                 text = 'Select Station'
                 onClick = { onSubmit }
                 classes = 'is-danger'
-                disabled = { !departureStation || !arrivalStation }
+                disabled = { disableSubmit() }
             />
 
             <Routes>

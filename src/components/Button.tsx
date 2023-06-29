@@ -8,7 +8,11 @@ interface ButtonProps {
 }
 
 const Button = ({ disabled, text, onClick, classes }: ButtonProps) => {
-    return <button className = { 'button ' + classes } onClick = { onClick } disabled = { disabled }>
+    return <button
+        className = { 'button ' + classes }
+        onClick = { onClick }
+        disabled = { disabled }
+    >
         {text}
     </button>;
 };
