@@ -7,8 +7,12 @@ interface ButtonProps {
     classes?: string;
 }
 
-const Button = ({ disabled, text, onClick, classes, ...props }: ButtonProps) => {
-    return <button className = { 'button ' + classes } onClick = { onClick } disabled = { disabled } { ...props }>
+const Button = ({ disabled, text, onClick, classes }: ButtonProps) => {
+    return <button
+        className = { 'button ' + classes }
+        onClick = { onClick }
+        disabled = { disabled }
+    >
         {text}
     </button>;
 };
