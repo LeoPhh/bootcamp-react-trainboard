@@ -25,15 +25,18 @@ const App = () => {
 
     const [departureStation, setDepartureStation] = React.useState('');
     const [arrivalStation, setArrivalStation] = React.useState('');
+    const [disableSubmit, setDisableSubmit] = React.useState(true);
+
+    React.useEffect(() => {
+        setDisableSubmit(
+            !departureStation || !arrivalStation || departureStation===arrivalStation,
+        );
+    }, [departureStation, arrivalStation]);
 
     const onSubmit = () => {
         departureStation
         && arrivalStation
         && window.open(urlMaker(departureStation, arrivalStation));
-    };
-
-    const disableSubmit = () => {
-        return !departureStation || !arrivalStation || departureStation===arrivalStation;
     };
 
     const getDisabledMessage = () => {
@@ -64,14 +67,14 @@ const App = () => {
             </div>
 
             {
-                disableSubmit() && getDisabledMessage()
+                disableSubmit && getDisabledMessage()
             }
 
             <Button
                 text = 'Select Station'
                 onClick = { onSubmit }
                 classes = 'is-danger'
-                disabled = { disableSubmit() }
+                disabled = { disableSubmit }
             />
 
             <Routes>
