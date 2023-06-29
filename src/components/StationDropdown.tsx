@@ -7,7 +7,7 @@ interface DropdownProps {
     valueUpdateFunction?: (newValue: string) => void;
 }
 
-const Dropdown = ({ label, selectableStations, id, valueUpdateFunction }: DropdownProps) => {
+const StationDropdown = ({ label, selectableStations, id, valueUpdateFunction }: DropdownProps) => {
     const [showPlaceholder, setShowPlaceholder] = React.useState(true);
     const placeHolder = 'Select station';
 
@@ -40,5 +40,5 @@ const Dropdown = ({ label, selectableStations, id, valueUpdateFunction }: Dropdo
     );
 };
 
-export default Dropdown;
+export default StationDropdown;
 

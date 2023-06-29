@@ -2,8 +2,8 @@ import React from 'react';
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Button from './components/Button';
-import Dropdown from './components/Dropdown';
 import Station from './components/Station';
+import StationDropdown from './components/StationDropdown';
 import Stations from './components/Stations';
 
 const stationMap = new Map<string, string>([
@@ -49,13 +49,13 @@ const App = () => {
     return <BrowserRouter>
         <div className = "App">
             <div className = "dropdown-menus-container">
-                <Dropdown
+                <StationDropdown
                     valueUpdateFunction = { setDepartureStation }
                     label = 'Departure:'
                     selectableStations = { stationNames }
                     id = 'departure-station-selection'
                 />
-                <Dropdown
+                <StationDropdown
                     valueUpdateFunction = { setArrivalStation }
                     label = 'Arrival:'
                     selectableStations = { stationNames }
