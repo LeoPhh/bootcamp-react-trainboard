@@ -41,9 +41,17 @@ const App = () => {
     );
     const [isLoading, setIsLoading] = React.useState(false);
 
-    const displayData = (trainData: {'outboundJourneys': JourneyEntry[]}) => (
-        <OutboundJourneysContainer outboundJourneyData = { trainData.outboundJourneys }/>
-    );
+    const displayTrainDataOrMessage = () => {
+        if (isLoading) {
+            return <div className = "is-large is-warning">Loading...</div>;
+        } else if (!trainData?.outboundJourneys.length) {
+            return <div className = "is-large is-danger">No results found.</div>;
+        } else {
+            return <OutboundJourneysContainer
+                outboundJourneyData = { trainData.outboundJourneys }
+            />;
+        }
+    };
 
     const getTrainRequestOptionsOrNull = (): [string, RequestInit] | null => {
         const originStation = stationMap.get(originStationName);
@@ -140,13 +148,7 @@ const App = () => {
                 disabled = { disableSubmit }
             />
 
-            {
-                isLoading && <div className = "is-large is-warning">Loading...</div>
-                || trainData && (
-                    trainData.outboundJourneys.length > 0 && displayData(trainData)
-                || <div className = "is-large is-danger">No results found.</div>
-                )
-            }
+            {displayTrainDataOrMessage()}
 
             {/* <Routes>
                 <Route path = "/stations">
