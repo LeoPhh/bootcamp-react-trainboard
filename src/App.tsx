@@ -159,7 +159,7 @@ const App = () => {
                     />
                 </div>
 
-                <div className = "button_container">
+                <div className = "button-container">
                     {ifDisabledGetMessage()}
                     <Button
                         text = 'Select Station'
@@ -170,9 +170,10 @@ const App = () => {
                 </div>
             </div>
 
-            <div className = "train-board">
+            <div className = "train-board-container">
                 {displayTrainData()}
             </div>
+
         </div>
 
     </BrowserRouter>;

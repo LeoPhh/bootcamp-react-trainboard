@@ -49,16 +49,16 @@ code {
   padding: 0.3rem 0;
 }
 
-.button_container {
+.button-container {
   margin-top: 20px;
 }
 
-.button_container > * {
+.button-container > * {
   margin-top: 10px;
   font-size: 1.3rem;
 }
 
-.button_container button {
+.button-container button {
   background-color: #8fb4ff;
   padding: 1rem 3rem;
   font-size: 1.5rem;
@@ -67,19 +67,19 @@ code {
   border-width: 0.3rem;
 }
 
-.button_container button:disabled {
+.button-container button:disabled {
   background-color: #ff8f94;
 }
 
-.button_container button:disabled:hover {
+.button-container button:disabled:hover {
   cursor: not-allowed;
 }
 
-.button_container button:hover {
+.button-container button:hover {
   cursor: pointer;
 }
 
-.button_container .disable-message {
+.button-container .disable-message {
   font-style: italic;
   color: red;
 }
@@ -94,7 +94,7 @@ code {
   border-radius: 30px;
 }
 
-.train-board {
+.train-board-container {
   padding: 20px 200px;
 }
 
