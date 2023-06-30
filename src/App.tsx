@@ -2,8 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import Button from './components/Button';
-import { JourneyEntry } from './components/JourneyBlock';
-import OutboundJourneysContainer from './components/JourneysContainer';
+import JourneysContainer from './components/JourneysContainer';
 import StationDropdown from './components/StationDropdown';
 
 interface IApiUrlMaker {
@@ -13,6 +12,20 @@ interface IApiUrlMaker {
     numberOfChildren: string;
     numberOfAdults: string;
     journeyType?: 'single' | 'return' | 'open_return';
+}
+
+export interface JourneyEntry {
+    arrivalTime: string;
+    departureTime: string;
+    destinationStation: {'crs': string; 'displayName': string};
+    isFastestJourney: boolean;
+    journeyDurationInMinutes: number;
+    originStation: {'crs': string; 'displayName': string};
+    stationMessages: null[];
+}
+
+interface OutboundJourneysContainerResponseData {
+    outboundJourneys: JourneyEntry[];
 }
 
 const stationMap = new Map<string, string>([
@@ -36,20 +49,24 @@ const App = () => {
     const [originStationName, setOriginStationName] = React.useState('');
     const [destinationStationName, setDestinationStationName] = React.useState('');
     const [disableSubmit, setDisableSubmit] = React.useState(true);
-    const [trainData, setTrainData] = React.useState(
-        null as null | {'outboundJourneys': JourneyEntry[]},
-    );
+    const [trainData, setTrainData] = React.useState<null | JourneyEntry[]>(null);
     const [isLoading, setIsLoading] = React.useState(false);
 
-    const displayTrainDataOrMessage = () => {
+    const displayTrainData = () => {
+        if (trainData?.length) {
+            return <JourneysContainer
+                journeyEntries = { trainData }
+            />;
+        }
+    };
+
+    const displayMessage = () => {
         if (isLoading) {
             return <div className = 'fetch-message'>Loading...</div>;
-        } else if (!trainData?.outboundJourneys.length) {
+        } else if (!trainData) {
+            return <></>;
+        } else if (!trainData.length) {
             return <div className = 'fetch-message'>No results found.</div>;
-        } else {
-            return <OutboundJourneysContainer
-                outboundJourneyData = { trainData.outboundJourneys }
-            />;
         }
     };
 
@@ -85,11 +102,16 @@ const App = () => {
             return;
         }
 
-        setIsLoading(true);
-        const response = await fetch(...requestOptions);
-        const json = await response.json();
-        setIsLoading(false);
-        setTrainData(json);
+        try {
+            setIsLoading(true);
+            const response = await fetch(...requestOptions);
+            const jsonData: OutboundJourneysContainerResponseData = await response.json();
+            setIsLoading(false);
+            setTrainData(jsonData.outboundJourneys);
+        } catch (error) {
+            return;
+        }
+
     };
 
     React.useEffect(() => {
@@ -106,19 +128,22 @@ const App = () => {
         && fetchTrainData();
     };
 
-    const getDisabledMessage = () => {
-        return <div className = "disable-message" >
-            {
-                (!originStationName || !destinationStationName)
+    const ifDisabledGetMessage = () => {
+        if (disableSubmit) {
+            return <div className = "disable-message" >
+                {
+                    (!originStationName || !destinationStationName)
             && <>Select two stations.</>
             || <>Departure station cannot be the same as arrival station.</>
-            }
-        </div>;
+                }
+            </div>;
+        }
+
     };
 
     return <BrowserRouter>
-        <div className = "user-entry">
-            <div className = "App">
+        <div className = "App">
+            <div className = "user-entry-container">
                 <div className = "dropdown-menus-container">
                     <StationDropdown
                         valueUpdateFunction = { setOriginStationName }
@@ -135,15 +160,18 @@ const App = () => {
                 </div>
 
                 <div className = "button_container">
-                    {disableSubmit && getDisabledMessage()}
+                    {ifDisabledGetMessage()}
                     <Button
                         text = 'Select Station'
                         onClick = { onSubmit }
                         disabled = { disableSubmit }
                     />
-                    {displayTrainDataOrMessage()}
+                    {displayMessage()}
                 </div>
+            </div>
 
+            <div className = "train-board">
+                {displayTrainData()}
             </div>
         </div>
 

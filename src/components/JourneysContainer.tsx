@@ -1,15 +1,16 @@
 import React from 'react';
-import JourneyBlock, { JourneyEntry } from './JourneyBlock';
+import type { JourneyEntry } from '../App';
+import JourneyBlock from './JourneyBlock';
 
 interface OutboundJourneysContainerProps {
-    outboundJourneyData: JourneyEntry[];
+    journeyEntries: JourneyEntry[];
 }
 
-const OutboundJourneysContainer = ({ outboundJourneyData }: OutboundJourneysContainerProps) => {
+const JourneysContainer = ({ journeyEntries }: OutboundJourneysContainerProps) => {
     return (
-        <div className = 'mt-5'>
-            {outboundJourneyData.map((j, i) => (
-                <div className = "outbound-container container p-5" key = { i }>
+        <div className = "outbound-container">
+            {journeyEntries.map((j, i) => (
+                <div key = { i }>
                     <JourneyBlock journeyData = { j } />
                 </div>
             ))}
@@ -17,4 +18,4 @@ const OutboundJourneysContainer = ({ outboundJourneyData }: OutboundJourneysCont
     );
 };
 
-export default OutboundJourneysContainer;
+export default JourneysContainer;

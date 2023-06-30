@@ -22,12 +22,14 @@ code {
   padding: .4rem;
 }
 
-.level {
-  background-color: #faf2f1;
-}
-
-.level-item {
-  padding: 12%;
+.journey-row {
+  background-color: #8fb4ff;
+  padding: 1.3rem 2.5rem;
+  margin: 2rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .dropdown-menus-container {
@@ -37,18 +39,23 @@ code {
 }
 
 .dropdown {
-  padding: 1rem 4rem;
-  font-size: 2.2rem;
+  padding: 1rem 1rem;
+  font-size: 2rem;
 }
 
 .dropdown select {
   width: 100%;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   padding: 0.3rem 0;
 }
 
 .button_container {
-  margin-top: 30px;
+  margin-top: 20px;
+}
+
+.button_container > * {
+  margin-top: 10px;
+  font-size: 1.3rem;
 }
 
 .button_container button {
@@ -56,14 +63,41 @@ code {
   padding: 1rem 3rem;
   font-size: 1.5rem;
   color: black;
+  border-radius: 1rem;
+  border-width: 0.3rem;
 }
 
-.user-entry {
+.button_container button:disabled {
+  background-color: #ff8f94;
+}
+
+.button_container button:disabled:hover {
+  cursor: not-allowed;
+}
+
+.button_container button:hover {
+  cursor: pointer;
+}
+
+.button_container .disable-message {
+  font-style: italic;
+  color: red;
+}
+
+.user-entry-container {
   background-color: #ebf1ff;
-  width: 50vw;
+  width: 45vw;
   margin: auto;
   padding: 1% 0;
   padding-bottom: 3%;
   margin-top: 6vh;
   border-radius: 30px;
+}
+
+.train-board {
+  padding: 20px 200px;
+}
+
+.journey-row > .journey-col:first-child {
+  text-align: left;
 }
