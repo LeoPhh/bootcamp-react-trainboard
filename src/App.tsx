@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import Button from './components/Button';
 import { JourneyEntry } from './components/JourneyBlock';
@@ -43,9 +43,9 @@ const App = () => {
 
     const displayTrainDataOrMessage = () => {
         if (isLoading) {
-            return <div className = "is-large is-warning">Loading...</div>;
+            return <div className = 'fetch-message'>Loading...</div>;
         } else if (!trainData?.outboundJourneys.length) {
-            return <div className = "is-large is-danger">No results found.</div>;
+            return <div className = 'fetch-message'>No results found.</div>;
         } else {
             return <OutboundJourneysContainer
                 outboundJourneyData = { trainData.outboundJourneys }
@@ -100,10 +100,6 @@ const App = () => {
         );
     }, [originStationName, destinationStationName]);
 
-    React.useEffect(() => {
-        console.log(trainData);
-    }, [trainData]);
-
     const onSubmit = () => {
         originStationName
         && destinationStationName
@@ -111,7 +107,7 @@ const App = () => {
     };
 
     const getDisabledMessage = () => {
-        return <div className = "disable-message has-text-danger" >
+        return <div className = "disable-message" >
             {
                 (!originStationName || !destinationStationName)
             && <>Select two stations.</>
@@ -121,45 +117,36 @@ const App = () => {
     };
 
     return <BrowserRouter>
-        <div className = "App">
-            <div className = "dropdown-menus-container">
-                <StationDropdown
-                    valueUpdateFunction = { setOriginStationName }
-                    label = 'Departure:'
-                    selectableStations = { stationNames }
-                    id = 'departure-station-selection'
-                />
-                <StationDropdown
-                    valueUpdateFunction = { setDestinationStationName }
-                    label = 'Arrival:'
-                    selectableStations = { stationNames }
-                    id = 'arrival-station-selection'
-                />
+        <div className = "user-entry">
+            <div className = "App">
+                <div className = "dropdown-menus-container">
+                    <StationDropdown
+                        valueUpdateFunction = { setOriginStationName }
+                        label = 'Departure:'
+                        selectableStations = { stationNames }
+                        id = 'departure-station-selection'
+                    />
+                    <StationDropdown
+                        valueUpdateFunction = { setDestinationStationName }
+                        label = 'Arrival:'
+                        selectableStations = { stationNames }
+                        id = 'arrival-station-selection'
+                    />
+                </div>
+
+                <div className = "button_container">
+                    {disableSubmit && getDisabledMessage()}
+                    <Button
+                        text = 'Select Station'
+                        onClick = { onSubmit }
+                        disabled = { disableSubmit }
+                    />
+                    {displayTrainDataOrMessage()}
+                </div>
+
             </div>
-
-            {
-                disableSubmit && getDisabledMessage()
-            }
-
-            <Button
-                text = 'Select Station'
-                onClick = { onSubmit }
-                classes = 'is-danger'
-                disabled = { disableSubmit }
-            />
-
-            {displayTrainDataOrMessage()}
-
-            {/* <Routes>
-                <Route path = "/stations">
-                    <Route path = ":id" element = { <Station/> }/>
-                    <Route index element = { <Stations/> }/>
-                </Route>
-            </Routes>
-            <footer>
-                <Link to = "/stations">Stations</Link>
-            </footer> */}
         </div>
+
     </BrowserRouter>;
 };
 

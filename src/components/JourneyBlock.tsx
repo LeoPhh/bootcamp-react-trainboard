@@ -6,7 +6,6 @@ export interface JourneyEntry {
     destinationStation: {'crs': string; 'displayName': string};
     isFastestJourney: boolean;
     journeyDurationInMinutes: number;
-    legs: any[];
     originStation: {'crs': string; 'displayName': string};
     stationMessages: any[];
     tickets: any[];
