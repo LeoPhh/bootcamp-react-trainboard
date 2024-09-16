@@ -1,10 +1,32 @@
 import React from 'react';
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import Button from './components/Button';
-import Station from './components/Station';
+import JourneysContainer from './components/JourneysContainer';
 import StationDropdown from './components/StationDropdown';
-import Stations from './components/Stations';
+
+interface IApiUrlMaker {
+    originStation: string;
+    destinationStation: string;
+    outboundDateTime: string;
+    numberOfChildren: string;
+    numberOfAdults: string;
+    journeyType?: 'single' | 'return' | 'open_return';
+}
+
+export interface JourneyEntry {
+    arrivalTime: string;
+    departureTime: string;
+    destinationStation: {'crs': string; 'displayName': string};
+    isFastestJourney: boolean;
+    journeyDurationInMinutes: number;
+    originStation: {'crs': string; 'displayName': string};
+    stationMessages: null[];
+}
+
+interface OutboundJourneysContainerResponseData {
+    outboundJourneys: JourneyEntry[];
+}
 
 const stationMap = new Map<string, string>([
     ['Kings Cross', 'KGX'],
@@ -16,77 +38,144 @@ const stationMap = new Map<string, string>([
 
 const stationNames = Array.from(stationMap.keys());
 
-const urlMaker = (stationOne: string, stationTwo: string) => {
-    return `https://www.lner.co.uk/travel-information/travelling-now/live-train-times/depart/${
-        stationMap.get(stationOne)}/${stationMap.get(stationTwo)}/`;
+const apiUrlMaker = (parameters: IApiUrlMaker) => {
+    const extractedParameters = Array.from(Object.entries(parameters));
+    return 'https://mobile-api-softwire2.lner.co.uk/v1/fares?'
+        + extractedParameters.map(([k, v]) => `${k}=${v}`).join('&');
 };
 
 const App = () => {
 
-    const [departureStation, setDepartureStation] = React.useState('');
-    const [arrivalStation, setArrivalStation] = React.useState('');
+    const [originStationName, setOriginStationName] = React.useState('');
+    const [destinationStationName, setDestinationStationName] = React.useState('');
     const [disableSubmit, setDisableSubmit] = React.useState(true);
+    const [trainData, setTrainData] = React.useState<null | JourneyEntry[]>(null);
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const displayTrainData = () => {
+        if (trainData?.length) {
+            return <JourneysContainer
+                journeyEntries = { trainData }
+            />;
+        }
+    };
+
+    const displayMessage = () => {
+        if (isLoading) {
+            return <div className = 'fetch-message'>Loading...</div>;
+        } else if (!trainData) {
+            return <></>;
+        } else if (!trainData.length) {
+            return <div className = 'fetch-message'>No results found.</div>;
+        }
+    };
+
+    const getTrainRequestOptionsOrNull = (): [string, RequestInit] | null => {
+        const originStation = stationMap.get(originStationName);
+        const destinationStation = stationMap.get(destinationStationName);
+
+        if (!originStation || !destinationStation) {
+            return null;
+        }
+
+        return [
+            apiUrlMaker({
+                originStation,
+                destinationStation,
+                outboundDateTime: new Date(Date.now() + 10000).toISOString(),
+                numberOfChildren: '0',
+                numberOfAdults: '1',
+            }),
+            {
+                method: 'GET',
+                headers: {
+                    'X-API-KEY': `${process.env.REACT_APP_X_API_KEY}`,
+                },
+            },
+        ];
+    };
+
+    const fetchTrainData = async () => {
+        const requestOptions = getTrainRequestOptionsOrNull();
+
+        if (!requestOptions) {
+            return;
+        }
+
+        try {
+            setIsLoading(true);
+            const response = await fetch(...requestOptions);
+            const jsonData: OutboundJourneysContainerResponseData = await response.json();
+            setIsLoading(false);
+            setTrainData(jsonData.outboundJourneys);
+        } catch (error) {
+            return;
+        }
+
+    };
 
     React.useEffect(() => {
         setDisableSubmit(
-            !departureStation || !arrivalStation || departureStation===arrivalStation,
+            !originStationName
+            || !destinationStationName
+            || originStationName===destinationStationName,
         );
-    }, [departureStation, arrivalStation]);
+    }, [originStationName, destinationStationName]);
 
     const onSubmit = () => {
-        departureStation
-        && arrivalStation
-        && window.open(urlMaker(departureStation, arrivalStation));
+        originStationName
+        && destinationStationName
+        && fetchTrainData();
     };
 
-    const getDisabledMessage = () => {
-        return <div className = "disable-message has-text-danger" >
-            {
-                (!departureStation || !arrivalStation)
+    const ifDisabledGetMessage = () => {
+        if (disableSubmit) {
+            return <div className = "disable-message" >
+                {
+                    (!originStationName || !destinationStationName)
             && <>Select two stations.</>
             || <>Departure station cannot be the same as arrival station.</>
-            }
-        </div>;
+                }
+            </div>;
+        }
+
     };
 
     return <BrowserRouter>
         <div className = "App">
-            <div className = "dropdown-menus-container">
-                <StationDropdown
-                    valueUpdateFunction = { setDepartureStation }
-                    label = 'Departure:'
-                    selectableStations = { stationNames }
-                    id = 'departure-station-selection'
-                />
-                <StationDropdown
-                    valueUpdateFunction = { setArrivalStation }
-                    label = 'Arrival:'
-                    selectableStations = { stationNames }
-                    id = 'arrival-station-selection'
-                />
+            <div className = "user-entry-container">
+                <div className = "dropdown-menus-container">
+                    <StationDropdown
+                        valueUpdateFunction = { setOriginStationName }
+                        label = 'Departure:'
+                        selectableStations = { stationNames }
+                        id = 'departure-station-selection'
+                    />
+                    <StationDropdown
+                        valueUpdateFunction = { setDestinationStationName }
+                        label = 'Arrival:'
+                        selectableStations = { stationNames }
+                        id = 'arrival-station-selection'
+                    />
+                </div>
+
+                <div className = "button-container">
+                    {ifDisabledGetMessage()}
+                    <Button
+                        text = 'Select Station'
+                        onClick = { onSubmit }
+                        disabled = { disableSubmit }
+                    />
+                    {displayMessage()}
+                </div>
             </div>
 
-            {
-                disableSubmit && getDisabledMessage()
-            }
+            <div className = "train-board-container">
+                {displayTrainData()}
+            </div>
 
-            <Button
-                text = 'Select Station'
-                onClick = { onSubmit }
-                classes = 'is-danger'
-                disabled = { disableSubmit }
-            />
-
-            <Routes>
-                <Route path = "/stations">
-                    <Route path = ":id" element = { <Station/> }/>
-                    <Route index element = { <Stations/> }/>
-                </Route>
-            </Routes>
-            <footer>
-                <Link to = "/stations">Stations</Link>
-            </footer>
         </div>
+
     </BrowserRouter>;
 };
 

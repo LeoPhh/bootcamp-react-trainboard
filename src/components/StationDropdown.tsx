@@ -25,10 +25,11 @@ const StationDropdown = ({ label, selectableStations, id, valueUpdateFunction }:
                         name = "stations"
                         id = { id }
                         onChange = { onChangeAndRemovePlaceholder }
+                        defaultValue = ''
                     >
                         {
                             showPlaceholder
-                            && <option value = "" disabled selected>{placeHolder}</option>
+                            && <option value = "" disabled >{placeHolder}</option>
                         }
                         {selectableStations.map((station, i) => {
                             return <option value = { station } key = { i }>{station}</option>;

@@ -21,3 +21,83 @@ code {
 .dropdown {
   padding: .4rem;
 }
+
+.journey-row {
+  background-color: #8fb4ff;
+  padding: 1.3rem 2.5rem;
+  margin: 2rem;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dropdown-menus-container {
+  justify-content: center;
+  align-items: center;
+  padding: 0 30%
+}
+
+.dropdown {
+  padding: 1rem 1rem;
+  font-size: 2rem;
+}
+
+.dropdown select {
+  width: 100%;
+  font-size: 1.4rem;
+  padding: 0.3rem 0;
+}
+
+.button-container {
+  margin-top: 20px;
+}
+
+.button-container > * {
+  margin-top: 10px;
+  font-size: 1.3rem;
+}
+
+.button-container button {
+  background-color: #8fb4ff;
+  padding: 1rem 3rem;
+  font-size: 1.5rem;
+  color: black;
+  border-radius: 1rem;
+  border-width: 0.3rem;
+}
+
+.button-container button:disabled {
+  background-color: #ff8f94;
+}
+
+.button-container button:disabled:hover {
+  cursor: not-allowed;
+}
+
+.button-container button:hover {
+  cursor: pointer;
+}
+
+.button-container .disable-message {
+  font-style: italic;
+  color: red;
+}
+
+.user-entry-container {
+  background-color: #ebf1ff;
+  width: 45vw;
+  margin: auto;
+  padding: 1% 0;
+  padding-bottom: 3%;
+  margin-top: 6vh;
+  border-radius: 30px;
+}
+
+.train-board-container {
+  padding: 20px 200px;
+}
+
+.journey-row > .journey-col:first-child {
+  text-align: left;
+}
